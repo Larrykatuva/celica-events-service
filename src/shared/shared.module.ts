@@ -9,6 +9,8 @@ import { CacheConfigService } from '../config/redis';
 import { HttpModule } from '@nestjs/axios';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UserCommandHandler } from './commands/handlers/userCommandHandler';
+import { OrganizerController } from './controllers/organizer.controller';
+import { UserController } from './controllers/user.controller';
 
 export const CommandHandlers = [UserCommandHandler];
 
@@ -21,7 +23,7 @@ export const CommandHandlers = [UserCommandHandler];
     HttpModule,
     CqrsModule,
   ],
-  controllers: [],
+  controllers: [OrganizerController, UserController],
   providers: [
     OrganizerService,
     RequestService,

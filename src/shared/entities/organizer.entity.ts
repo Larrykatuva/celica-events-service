@@ -23,11 +23,10 @@ export class Organizer {
   @Column()
   logo: string;
 
-  @Column()
+  @Column({ nullable: true })
   country: string;
 
   @OneToOne(() => User, (user) => user.sub)
-  @JoinColumn()
   owner: User;
 
   @CreateDateColumn()

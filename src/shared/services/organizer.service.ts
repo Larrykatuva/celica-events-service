@@ -30,6 +30,7 @@ export class OrganizerService {
   async transportAction(
     transportAction: TransportAction<any>,
   ): Promise<Organizer | UpdateResult> {
+    console.log(transportAction)
     switch (transportAction.action) {
       case TCP_Action.CREATE: {
         return await this.createOrganizer(transportAction.data);
@@ -44,7 +45,11 @@ export class OrganizerService {
   }
 
   async createOrganizer(organizer: Organizer): Promise<Organizer> {
-    return await this.organizerRepository.save(organizer);
+    try {
+      return await this.organizerRepository.save(organizer);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async updateOrganizer(data: {
