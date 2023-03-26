@@ -3,29 +3,26 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Organizer } from '../../shared/entities/organizer.entity';
+import { Order } from './order.entity';
 
 @Entity()
-export class Event {
+export class OrderItem {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Organizer, (organizer) => organizer.sub)
+  @ManyToOne(() => Order, (order) => order.id)
   @JoinColumn()
-  organizer: Organizer;
+  order: Order;
 
   @Column()
-  cover: string;
+  quantity: number;
 
-  @Column()
-  location: string;
-
-  @Column({ type: 'text' })
-  description: string;
+  @Column({ type: 'decimal', precision: 2 })
+  unitPrice: number;
 
   @CreateDateColumn()
   createdAt: Date;

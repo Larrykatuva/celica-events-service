@@ -10,11 +10,12 @@ import { TransportAction } from '../interfaces/shared.interface';
 export class OrganizerController {
   constructor(private organizerService: OrganizerService) {}
 
-  @UseGuards(RpcAuthGuard)
+  // @UseGuards(RpcAuthGuard)
   @MessagePattern('celica_organizer')
   async handleOrganizerEvent(
     @Payload() data: TransportAction<any>,
   ): Promise<void> {
-    await this.organizerService.transportAction(data);
+    console.log('FROM KAFKA => ', data);
+    //await this.organizerService.transportAction(data);
   }
 }
