@@ -23,6 +23,12 @@ export class OrganizerService {
     private configService: ConfigService,
   ) {}
 
+  async filterOrganizer(filterOptions: any): Promise<Organizer> {
+    return await this.organizerRepository.findOne({
+      where: { ...filterOptions },
+    });
+  }
+
   /**
    * Perform action from transport event.
    * @param transportAction
@@ -30,7 +36,7 @@ export class OrganizerService {
   async transportAction(
     transportAction: TransportAction<any>,
   ): Promise<Organizer | UpdateResult> {
-    console.log(transportAction)
+    console.log(transportAction);
     switch (transportAction.action) {
       case TCP_Action.CREATE: {
         return await this.createOrganizer(transportAction.data);
