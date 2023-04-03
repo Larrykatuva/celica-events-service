@@ -4,6 +4,11 @@ export enum TCP_Action {
   DELETE = 'DELETE',
 }
 
+export enum USER {
+  USER = 'USER',
+  APP = 'APP',
+}
+
 export interface TransportAction<T> {
   action: TCP_Action;
   data?: T;
@@ -28,6 +33,7 @@ export interface TokenInterface {
   access_token: string;
   token_type: string;
   expires_in: string;
+  type: USER;
 }
 
 export interface TokenVerifyResponse {

@@ -1,3 +1,5 @@
+import { User } from '../entities/user.entity';
+
 export enum ROLE {
   SUPER_ADMIN = 'SUPER_ADMIN',
   SUPPORT = 'SUPPORT',
@@ -14,3 +16,19 @@ export const CELICA_STAFF_ROLES: ROLE[] = [
 ];
 
 export const ORGANIZER_STAFF_ROLE = [ROLE.ORGANIZER_ADMIN];
+
+export interface UserRole {
+  role: ROLE;
+  user: string | User;
+  assignedBy: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginatedRequestResponse<T> {
+  count: number;
+  next: string;
+  previous: string;
+  data: T[];
+}
