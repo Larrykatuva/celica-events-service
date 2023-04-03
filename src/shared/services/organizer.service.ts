@@ -72,7 +72,7 @@ export class OrganizerService {
    * Get application authentication token. Check if token already exists in the
    * cache and return it else make a post request to auth service for a new access token.
    */
-  async getAppToken(): Promise<any> {
+  async getAppToken(): Promise<string> {
     const token = await this.cacheService.get<TokenInterface>(
       `${this.configService.get<string>('SERVICE_NAME')}_TOKEN`,
     );
@@ -83,6 +83,7 @@ export class OrganizerService {
         grant_type: GRANT_TYPE.CLIENT_CREDENTIALS,
         client_id: this.configService.get<string>('CLIENT_ID'),
         client_secret: this.configService.get<string>('CLIENT_SECRET'),
+        redirect_uri: this.configService.get<string>('REDIRECT_URL'),
       },
       RequestContentType.FORM_URLENCODED,
     );

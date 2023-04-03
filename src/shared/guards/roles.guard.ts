@@ -4,6 +4,7 @@ import { ROLES_KEY } from '../decorators/roles.decorators';
 import { Request } from 'express';
 import { User } from '../entities/user.entity';
 import { ROLE } from '../interfaces/roles.interfaces';
+import { RoleService } from '../services/role.service';
 
 /**
  * RolesGuard class which will compare the roles assigned to the current user
@@ -26,10 +27,7 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest<Request>();
     const user: User = request['user'];
-    const roles = await this.rolesService.filterRecords({
-      user: { sub: user.sub },
-    });
-    const setRoles = roles.map((role) => role.role);
+    const setRoles = await this.rolesService.getUserRoles(user.sub);
     return requiredRoles.some((role) => setRoles?.includes(role));
   }
 }
