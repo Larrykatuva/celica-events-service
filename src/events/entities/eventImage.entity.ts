@@ -14,7 +14,7 @@ export class EventImage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Event, (event) => event.id)
+  @ManyToOne(() => Event, (event) => event.images)
   @JoinColumn()
   event: Event;
 

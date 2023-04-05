@@ -9,7 +9,7 @@ export const ROLES_KEY = 'roles';
 export const Roles = (...roles: ROLE[]) => SetMetadata(ROLES_KEY, roles);
 
 /**
- * Universal decorator which combines roles decorator and auth guard decorator.
+ * Universal decorator which combines roles decorator and auth guard decorator functionalities.
  * @param roles
  * @constructor
  */

@@ -22,10 +22,6 @@ export class Order {
   @JoinColumn()
   owner: User;
 
-  @ManyToOne(() => Event, (event) => event.id)
-  @JoinColumn()
-  event: Event;
-
   @Column({ type: 'decimal', precision: 2 })
   amount: number;
 

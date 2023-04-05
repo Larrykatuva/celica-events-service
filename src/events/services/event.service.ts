@@ -104,6 +104,7 @@ export class EventService {
     const newEvent = await this.eventRepository.save({
       organizer: organizer,
       location: event.location,
+      category: event.category,
       cover: cover,
       description: event.description,
       ...eventMapper[1],

@@ -4,10 +4,10 @@ import { OrganizerService } from './organizer.service';
 import { RequestService } from './request.service';
 import { ConfigService } from '@nestjs/config';
 import {
-  PaginatedRequestResponse,
   ROLE,
   UserRole,
 } from '../interfaces/roles.interfaces';
+import { PaginatedRequestResponse } from "../interfaces/shared.interface";
 
 @Injectable()
 export class RoleService {

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { EventCategory } from '../interface/event.interface';
 
 export class EventMapperColumnDto {
   @ApiProperty()
@@ -13,6 +14,10 @@ export class EventMapperColumnDto {
 
 export class CreateEventDto {
   organizer: string;
+
+  @ApiProperty({ enum: EventCategory })
+  @IsNotEmpty()
+  category: EventCategory;
 
   @ApiProperty()
   @IsNotEmpty()
