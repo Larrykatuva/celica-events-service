@@ -51,3 +51,10 @@ export interface UserInfoResponse {
   iat: number;
   exp: number;
 }
+
+export interface PaginatedRequestResponse<T> {
+  count: number;
+  next: string;
+  previous: string;
+  data: T[];
+}

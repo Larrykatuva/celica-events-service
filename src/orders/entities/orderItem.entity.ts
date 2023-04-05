@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
+import { Ticket } from '../../ticket/entities/ticket.entity';
 
 @Entity()
 export class OrderItem {
@@ -20,6 +22,9 @@ export class OrderItem {
 
   @Column()
   quantity: number;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.orderItem)
+  tickets: Ticket[];
 
   @Column({ type: 'decimal', precision: 2 })
   unitPrice: number;

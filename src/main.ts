@@ -44,7 +44,7 @@ async function bootstrap() {
    */
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.startAllMicroservices();
+  // await app.startAllMicroservices();
 
   await app.listen(configService.get<string>('PORT'));
 }

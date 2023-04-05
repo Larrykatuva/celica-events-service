@@ -21,7 +21,7 @@ export class EventStatus {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Event, (event) => event.id)
+  @ManyToOne(() => Event, (event) => event.status)
   @JoinColumn()
   event: Event;
 

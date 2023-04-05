@@ -12,7 +12,7 @@ export class EventMapper {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Event, (event) => event.id)
+  @OneToOne(() => Event, (event) => event.mapper)
   @JoinColumn()
   event: Event;
 
