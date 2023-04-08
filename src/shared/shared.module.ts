@@ -11,6 +11,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { UserCommandHandler } from './commands/handlers/userCommandHandler';
 import { OrganizerController } from './controllers/organizer.controller';
 import { UserController } from './controllers/user.controller';
+import { RoleService } from './services/role.service';
 
 export const CommandHandlers = [UserCommandHandler];
 
@@ -28,8 +29,9 @@ export const CommandHandlers = [UserCommandHandler];
     OrganizerService,
     RequestService,
     UserService,
+    RoleService,
     ...CommandHandlers,
   ],
-  exports: [OrganizerService, RequestService, UserService],
+  exports: [OrganizerService, RequestService, UserService, RoleService],
 })
 export class SharedModule {}

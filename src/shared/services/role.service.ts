@@ -3,11 +3,8 @@ import { Cache } from 'cache-manager';
 import { OrganizerService } from './organizer.service';
 import { RequestService } from './request.service';
 import { ConfigService } from '@nestjs/config';
-import {
-  ROLE,
-  UserRole,
-} from '../interfaces/roles.interfaces';
-import { PaginatedRequestResponse } from "../interfaces/shared.interface";
+import { ROLE, UserRole } from '../interfaces/roles.interfaces';
+import { PaginatedRequestResponse } from '../interfaces/shared.interface';
 
 @Injectable()
 export class RoleService {

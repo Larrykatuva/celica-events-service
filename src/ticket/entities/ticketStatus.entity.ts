@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,7 +17,7 @@ export class TicketStatus {
   @Column({ type: 'enum', enum: TICKET_STATUS })
   status: TICKET_STATUS;
 
-  @OneToOne(() => Ticket, (ticket) => ticket.status)
+  @ManyToOne(() => Ticket, (ticket) => ticket.status)
   ticket: Ticket;
 
   @CreateDateColumn()

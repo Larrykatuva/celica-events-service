@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -13,7 +14,7 @@ import { EventStatus } from './eventStatus.entity';
 import { EventMapper } from './eventMapper.entity';
 import { EventImage } from './eventImage.entity';
 import { EventCategory } from '../interface/event.interface';
-import { Ticket } from "../../ticket/entities/ticket.entity";
+import { Ticket } from '../../ticket/entities/ticket.entity';
 
 @Entity()
 export class Event {
@@ -23,7 +24,7 @@ export class Event {
   @Column({ enum: EventCategory })
   category: EventCategory;
 
-  @OneToOne(() => Organizer, (organizer) => organizer.sub)
+  @ManyToOne(() => Organizer, (organizer) => organizer.sub)
   @JoinColumn()
   organizer: Organizer;
 
