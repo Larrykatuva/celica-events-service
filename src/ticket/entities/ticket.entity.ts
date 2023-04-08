@@ -4,7 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,8 +21,11 @@ export class Ticket {
   @JoinColumn()
   orderItem: OrderItem;
 
-  @OneToOne(() => TicketStatus, (ticketStatus) => ticketStatus.ticket)
-  status: TicketStatus;
+  @OneToMany(() => TicketStatus, (ticketStatus) => ticketStatus.ticket)
+  status: TicketStatus[];
+
+  @Column()
+  accessCode: string;
 
   @ManyToOne(() => Event, (event) => event.tickets)
   @JoinColumn()

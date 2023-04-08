@@ -4,35 +4,51 @@ import { Event } from '../entities/event.entity';
 import { Repository } from 'typeorm';
 import { OrganizerService } from '../../shared/services/organizer.service';
 import { CreateEventDto } from '../dtos/event.dtos';
-import { EventMapper } from '../entities/eventMapper.entity';
 import { DefaultPagination } from '../../shared/interfaces/pagination.interface';
 import { EventMapperService } from './eventMapper.service';
+import { EventImage } from '../entities/eventImage.entity';
+import { EVENT_STATUS, EventStatus } from '../entities/eventStatus.entity';
+import { UserService } from '../../shared/services/user.service';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event) private eventRepository: Repository<Event>,
+    @InjectRepository(EventImage)
+    private eventImageRepository: Repository<EventImage>,
+    @InjectRepository(EventStatus)
+    private eventStatusRepository: Repository<EventStatus>,
     private organizerService: OrganizerService,
     private eventMapperService: EventMapperService,
+    private userService: UserService,
   ) {}
+
+  async addEventImage(event: Event): Promise<EventImage> {
+    return await this.eventImageRepository.save({
+      event: event,
+      eventImage: '',
+    });
+  }
 
   /**
    * Prepare event mapper objects for event custom fields and event mapper fields.
    * @param event
    */
-  async prepareEventMapperObject(
-    event: CreateEventDto,
-  ): Promise<[Partial<EventMapper>, Partial<Event>]> {
+  prepareEventMapperObject(event: CreateEventDto): [any, any] {
     delete event.organizer;
     delete event.location;
     delete event.description;
+    delete event.category;
     const eventsMapperArr = Object.entries(event);
     const count = 1;
     const mapperKeysObj = {};
     const eventValuesObj = {};
-    for (let i = 0; i <= eventsMapperArr.length; i++) {
-      mapperKeysObj[`field${count.toString()}`] = eventsMapperArr[i]['key'];
-      eventValuesObj[`field${count.toString()}`] = eventsMapperArr[i]['value'];
+    for (let i = 0; i < eventsMapperArr.length; i++) {
+      let field = eventsMapperArr[i][1];
+      if (typeof eventsMapperArr[i][1] == 'string')
+        field = JSON.parse(eventsMapperArr[i][1]);
+      mapperKeysObj[`field${count.toString()}`] = field['key'];
+      eventValuesObj[`field${count.toString()}`] = field['value'];
     }
     return [mapperKeysObj, eventValuesObj];
   }
@@ -99,14 +115,17 @@ export class EventService {
     const organizer = await this.organizerService.filterOrganizer({
       sub: event.organizer,
     });
-    if (!organizer) throw new BadRequestException('Invalid organizer id');
-    const eventMapper = this.prepareEventMapperObject(event);
-    const newEvent = await this.eventRepository.save({
+    const eventData = {
       organizer: organizer,
       location: event.location,
       category: event.category,
       cover: cover,
       description: event.description,
+    };
+    if (!organizer) throw new BadRequestException('Invalid organizer id');
+    const eventMapper = this.prepareEventMapperObject(event);
+    const newEvent = await this.eventRepository.save({
+      ...eventData,
       ...eventMapper[1],
     });
     if (eventMapper[0]) {
@@ -116,5 +135,23 @@ export class EventService {
       });
     }
     return newEvent;
+  }
+
+  // async updateEvent()
+
+  async setEventStatus(
+    eventId: string,
+    status: EVENT_STATUS,
+    actionBy: string,
+  ): Promise<EventStatus> {
+    const user = await this.userService.filterUser({ sub: actionBy });
+    if (!user) throw new BadRequestException('Invalid user id');
+    const event = await this.filterEvent({ id: eventId });
+    if (!event) throw new BadRequestException('Invalid event id');
+    return await this.eventStatusRepository.save({
+      event: event,
+      status: status,
+      actionBy: user,
+    });
   }
 }
