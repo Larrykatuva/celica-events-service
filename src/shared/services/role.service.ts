@@ -3,7 +3,7 @@ import { Cache } from 'cache-manager';
 import { OrganizerService } from './organizer.service';
 import { RequestService } from './request.service';
 import { ConfigService } from '@nestjs/config';
-import { ROLE, UserRole } from '../interfaces/roles.interfaces';
+import { CELICA_STAFF_ROLES, ROLE, UserRole } from "../interfaces/roles.interfaces";
 import { PaginatedRequestResponse } from '../interfaces/shared.interface';
 
 @Injectable()
@@ -24,13 +24,15 @@ export class RoleService {
     const roles = await this.cacheService.get<string[]>(`${sub}_ROLES`);
     if (roles) return roles;
     const appToken = await this.organizerService.getAppToken();
-    const { data } = await this.requestService.getRequest<
+    const {
+      data: { data },
+    } = await this.requestService.getRequest<
       PaginatedRequestResponse<UserRole>
     >(
-      `${this.configService.get<string>('ORGANIZER_URL')}/user/role/${sub}`,
+      `${this.configService.get<string>('ORGANIZER_URL')}/role/user/${sub}`,
       appToken,
     );
-    const userRoles = data.data.map((role) => role.name);
+    const userRoles = data.map((role) => role.role);
     await this.cacheService.set(
       `${sub}_ROLES`,
       userRoles,
@@ -44,8 +46,7 @@ export class RoleService {
    * @param sub
    */
   async isCelicaStaff(sub: string): Promise<boolean> {
-    const requiredRoles = [ROLE.SUPER_ADMIN, ROLE.SUPPORT, ROLE.BUSINESS];
     const setRoles = await this.getUserRoles(sub);
-    return requiredRoles.some((role) => setRoles?.includes(role));
+    return CELICA_STAFF_ROLES.some((role) => setRoles?.includes(role));
   }
 }

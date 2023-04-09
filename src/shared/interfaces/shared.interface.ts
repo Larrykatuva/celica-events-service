@@ -58,3 +58,16 @@ export interface PaginatedRequestResponse<T> {
   previous: string;
   data: T[];
 }
+
+export interface OrganizerResponse {
+  id: string;
+  name: string;
+  country: any;
+  owner: any;
+}
+
+export interface OrganizerAffiliate {
+  id: string;
+  user: UserInfoResponse;
+  organizer: OrganizerResponse;
+}

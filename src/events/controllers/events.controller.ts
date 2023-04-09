@@ -46,15 +46,10 @@ import { UserInfoResponse } from '../../shared/interfaces/shared.interface';
 export class EventsController {
   constructor(private eventService: EventService) {}
 
-  @Get('test')
-  @UseGuards(AuthGuard)
-  testAuth(): string {
-    return 'tested';
-  }
-
   @Post()
   @UseGuards(AuthGuard)
   @AuthRoles(...CELICA_STAFF_ROLES, ...ORGANIZER_STAFF_ROLE)
+  @SharedResponse(EventResponseDto)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'avatar', maxCount: 1 },
@@ -127,7 +122,5 @@ export class EventsController {
       background?: Express.Multer.File[];
     },
     @Body() event: EventUpdateDto,
-  ): Promise<any> {
-
-  }
+  ): Promise<any> {}
 }
