@@ -1,0 +1,6 @@
+export enum TICKET_CATEGORY {
+  VVIP = 'VVIP',
+  VIP = 'VIP',
+  REGULAR = 'REGULAR',
+  GENERAL = 'GENERAL',
+}

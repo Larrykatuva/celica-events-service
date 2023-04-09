@@ -15,6 +15,7 @@ import { EventMapper } from './eventMapper.entity';
 import { EventImage } from './eventImage.entity';
 import { EventCategory } from '../interface/event.interface';
 import { Ticket } from '../../ticket/entities/ticket.entity';
+import { TicketCategory } from '../../ticket/entities/ticketCategory.entity';
 
 @Entity()
 export class Event {
@@ -36,6 +37,9 @@ export class Event {
 
   @Column({ type: 'text' })
   description: string;
+
+  @Column({ type: 'text', nullable: true })
+  style: string;
 
   @Column({ type: 'text', nullable: true })
   field1: string;
@@ -78,6 +82,9 @@ export class Event {
 
   @OneToMany(() => Ticket, (ticket) => ticket.event)
   tickets: Ticket[];
+
+  @OneToMany(() => TicketCategory, (category) => category.event)
+  ticketCategory: TicketCategory[];
 
   @CreateDateColumn()
   createdAt: Date;

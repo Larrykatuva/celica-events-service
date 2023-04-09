@@ -73,6 +73,7 @@ export const SharedPaginatedResponse = <T extends Type<any>>(dto: T) => {
       description: 'Bad request',
       type: BadRequestResponse,
     }),
+    UseInterceptors(PaginationInterceptor),
   );
 };
 

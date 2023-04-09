@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType, PartialType } from "@nestjs/swagger";
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { EventCategory } from '../interface/event.interface';
 import { EVENT_STATUS } from '../entities/eventStatus.entity';
@@ -15,6 +15,9 @@ export class EventMapperColumnDto {
 }
 
 export class EventUpdateDto {
+  @ApiProperty()
+  style: string;
+
   @ApiProperty({ enum: EventCategory })
   category: EventCategory;
 
@@ -172,6 +175,9 @@ export class EventStatusUpdateDto {
 }
 
 export class EventResponseDto extends EventDto {
+  @ApiProperty()
+  style: string;
+
   @ApiProperty()
   organizer: string;
 

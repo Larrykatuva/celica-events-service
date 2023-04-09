@@ -1,6 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {
   GRANT_TYPE,
+  OrganizerAffiliate,
   RequestContentType,
   TCP_Action,
   TokenInterface,
@@ -78,7 +79,7 @@ export class OrganizerService {
     );
     if (token) return token.access_token;
     const { data } = await this.requestService.postRequest<TokenInterface>(
-      `${this.configService.get<string>('AUTH_URL')}/token`,
+      `${this.configService.get<string>('AUTH_URL')}/auth/app-token`,
       {
         grant_type: GRANT_TYPE.CLIENT_CREDENTIALS,
         client_id: this.configService.get<string>('CLIENT_ID'),
@@ -93,6 +94,27 @@ export class OrganizerService {
       this.configService.get<number>('CACHE_DURATION'),
     );
     return data.access_token;
+  }
+
+  /**
+   * Check if user is an affiliate from the organizer service.
+   * @param sub
+   */
+  async getOrganizerAffiliate(sub: string): Promise<OrganizerAffiliate> {
+    const affiliate = await this.cacheService.get<OrganizerAffiliate>(
+      `${sub}_AFFILIATE`,
+    );
+    if (affiliate) return affiliate;
+    const token = await this.getAppToken();
+    const {
+      data: { data },
+    } = await this.requestService.getRequest<OrganizerAffiliate>(
+      `${this.configService.get<string>(
+        'ORGANIZER_URL',
+      )}/affiliate/user/${sub}`,
+    );
+    await this.cacheService.set(`${sub}_AFFILIATE`, data);
+    return data;
   }
 
   /**
