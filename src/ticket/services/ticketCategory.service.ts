@@ -18,7 +18,7 @@ export class TicketCategoryService {
    * @param filterOptions
    * @param options
    */
-  async filterTicketEvent(
+  async filterTicketCategory(
     filterOptions: any,
     options?: any,
   ): Promise<TicketCategory> {
@@ -47,7 +47,7 @@ export class TicketCategoryService {
   ): Promise<TicketCategory> {
     const event = await this.eventService.filterEvent({ id: eventId });
     if (!event) throw new BadRequestException('Event not found');
-    if (await this.filterTicketEvent({ event: event, category: category }))
+    if (await this.filterTicketCategory({ event: event, category: category }))
       throw new BadRequestException('Event ticket category is already set.');
     return await this.ticketCategoryRepository.save({
       event: event,
@@ -66,12 +66,12 @@ export class TicketCategoryService {
     filterOptions: any,
     data: { category?: TICKET_CATEGORY; quantity?: number; hasLimit?: boolean },
   ): Promise<TicketCategory> {
-    if (!(await this.filterTicketEvent(filterOptions)))
+    if (!(await this.filterTicketCategory(filterOptions)))
       throw new BadRequestException('Ticket category not found');
     await this.ticketCategoryRepository.update(
       { ...filterOptions },
       { ...data },
     );
-    return await this.filterTicketEvent(filterOptions);
+    return await this.filterTicketCategory(filterOptions);
   }
 }

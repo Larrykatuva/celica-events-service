@@ -3,7 +3,12 @@ import { Cache } from 'cache-manager';
 import { OrganizerService } from './organizer.service';
 import { RequestService } from './request.service';
 import { ConfigService } from '@nestjs/config';
-import { CELICA_STAFF_ROLES, ROLE, UserRole } from "../interfaces/roles.interfaces";
+import {
+  CELICA_STAFF_ROLES,
+  ORGANIZER_STAFF_ROLE,
+  ROLE,
+  UserRole,
+} from '../interfaces/roles.interfaces';
 import { PaginatedRequestResponse } from '../interfaces/shared.interface';
 
 @Injectable()
@@ -44,9 +49,38 @@ export class RoleService {
   /**
    * Check if user is celica staff.
    * @param sub
+   * @param exclude
    */
-  async isCelicaStaff(sub: string): Promise<boolean> {
+  async isCelicaStaff(sub: string, exclude?: ROLE[]): Promise<boolean> {
     const setRoles = await this.getUserRoles(sub);
-    return CELICA_STAFF_ROLES.some((role) => setRoles?.includes(role));
+    return CELICA_STAFF_ROLES.filter((name) => {
+      return !new Set(exclude)?.has(name);
+    }).some((role) => setRoles?.includes(role));
+  }
+
+  /**
+   * Check if user is either a cilica or organizer staff.
+   * @param sub
+   * @param exclude
+   */
+  async isStaff(sub: string, exclude?: ROLE[]): Promise<boolean> {
+    const setRoles = await this.getUserRoles(sub);
+    return [...CELICA_STAFF_ROLES, ...ORGANIZER_STAFF_ROLE]
+      .filter((name) => {
+        return !new Set(exclude)?.has(name);
+      })
+      .some((role) => setRoles?.includes(role));
+  }
+
+  /**
+   * Check if user is an organizer staff.
+   * @param sub
+   * @param exclude
+   */
+  async isOrganizerStaff(sub: string, exclude?: ROLE[]): Promise<boolean> {
+    const setRoles = await this.getUserRoles(sub);
+    return ORGANIZER_STAFF_ROLE.filter((name) => {
+      return !new Set(exclude)?.has(name);
+    }).some((role) => setRoles?.includes(role));
   }
 }

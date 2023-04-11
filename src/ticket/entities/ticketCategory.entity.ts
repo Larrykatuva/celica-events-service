@@ -20,6 +20,12 @@ export class TicketCategory {
   @Column({ enum: TICKET_CATEGORY, type: 'enum' })
   category: TICKET_CATEGORY;
 
+  @Column()
+  price: number;
+
+  @Column()
+  sold: number;
+
   @Column({ nullable: true })
   quantity: number;
 
