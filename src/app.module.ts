@@ -4,6 +4,8 @@ import DatabaseConfig from './database/connection';
 import { SharedModule } from './shared/shared.module';
 import { EventModule } from './events/event.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { TicketModule } from './ticket/ticket.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { MulterModule } from '@nestjs/platform-express';
     DatabaseConfig,
     SharedModule,
     EventModule,
+    TicketModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

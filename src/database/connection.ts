@@ -17,6 +17,7 @@ import { TicketStatus } from '../ticket/entities/ticketStatus.entity';
 import { Order } from '../orders/entities/order.entity';
 import { OrderStatus } from '../orders/entities/orderStatus.entity';
 import { OrderItem } from '../orders/entities/orderItem.entity';
+import { TicketCategory } from '../ticket/entities/ticketCategory.entity';
 
 /**
  * Database connection configurations.
@@ -44,6 +45,7 @@ class TypeOrmConfigService implements TypeOrmOptionsFactory {
         Order,
         OrderStatus,
         OrderItem,
+        TicketCategory,
       ],
       synchronize: this.configService.get<boolean>('DATABASE_SYNC'),
       logging: this.configService.get<boolean>('LOGGER'),

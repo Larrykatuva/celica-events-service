@@ -11,7 +11,7 @@ export class OrderItemService {
     private orderItemRepository: Repository<OrderItem>,
   ) {}
 
-  async createOrderStatus(
+  async createOrderItem(
     order: Order,
     quantity: number,
     unitPrice: number,
@@ -23,7 +23,7 @@ export class OrderItemService {
     return await this.orderItemRepository.save(orderItem);
   }
 
-  async filterOrderStatus(filterOptions: any): Promise<OrderItem> {
+  async filterOrderItem(filterOptions: any): Promise<OrderItem> {
     return await this.orderItemRepository.findOne({
       where: { ...filterOptions },
     });

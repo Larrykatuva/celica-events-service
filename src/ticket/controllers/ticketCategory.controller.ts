@@ -27,7 +27,7 @@ import { UserInfoResponse } from '../../shared/interfaces/shared.interface';
 import { OrganizerService } from '../../shared/services/organizer.service';
 import { EventService } from '../../events/services/event.service';
 
-@ApiTags('TICKET')
+@ApiTags('Ticket')
 @Controller('ticket/category')
 export class TicketCategoryController {
   constructor(
@@ -71,7 +71,7 @@ export class TicketCategoryController {
   @Get('id')
   @SharedResponse(TicketCategoryResponseDto, 200)
   async getTicketCategory(@Param('id') id: string): Promise<TicketCategory> {
-    const category = await this.ticketCategoryService.filterTicketEvent({
+    const category = await this.ticketCategoryService.filterTicketCategory({
       id: id,
     });
     if (category) throw new BadRequestException('Ticket category not found');

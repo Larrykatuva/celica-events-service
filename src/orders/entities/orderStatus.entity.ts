@@ -21,7 +21,7 @@ export class OrderStatus {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Order, (order) => order.id)
+  @ManyToOne(() => Order, (order) => order.status)
   @JoinColumn()
   order: Order;
 
