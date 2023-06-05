@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotImplementedException,
 } from '@nestjs/common';
 import { Agent, AgentOptions } from 'https';
 import { catchError, lastValueFrom } from 'rxjs';
@@ -10,6 +9,7 @@ import * as qs from 'qs';
 import { AxiosError } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { RequestContentType } from '../interfaces/shared.interface';
+import * as fs from 'fs';
 
 @Injectable()
 export class RequestService {
@@ -26,7 +26,8 @@ export class RequestService {
   setContentType(contentType: string): void {
     switch (contentType) {
       case RequestContentType.FORM_DATA:
-        throw new NotImplementedException();
+        this.contentType = RequestContentType.FORM_DATA;
+        break;
       case RequestContentType.FORM_URLENCODED:
         this.contentType = RequestContentType.FORM_URLENCODED;
         break;
@@ -52,6 +53,17 @@ export class RequestService {
         return payload;
       case RequestContentType.FORM_URLENCODED:
         return qs.stringify(payload);
+      case RequestContentType.FORM_DATA:
+        const data: any = new FormData();
+        const keys = Object.keys(payload);
+        for (let i = 0; i < keys.length; i++) {
+          if (payload[keys[i]].path) {
+            data.append(keys[i], fs.createReadStream(payload[keys[i]].path));
+          } else {
+            data.append(keys[i], payload[keys[i]]);
+          }
+        }
+        return data;
       default:
         break;
     }

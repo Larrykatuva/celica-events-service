@@ -6,29 +6,27 @@ import { OrganizerService } from '../../shared/services/organizer.service';
 import { CreateEventDto } from '../dtos/event.dtos';
 import { DefaultPagination } from '../../shared/interfaces/pagination.interface';
 import { EventMapperService } from './eventMapper.service';
-import { EventImage } from '../entities/eventImage.entity';
 import { EVENT_STATUS, EventStatus } from '../entities/eventStatus.entity';
 import { UserService } from '../../shared/services/user.service';
+import { RequestService } from '../../shared/services/request.service';
+import { EventImageService } from './eventImage.service';
+import { ConfigService } from '@nestjs/config';
+import { RequestContentType } from '../../shared/interfaces/shared.interface';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event) private eventRepository: Repository<Event>,
-    @InjectRepository(EventImage)
-    private eventImageRepository: Repository<EventImage>,
     @InjectRepository(EventStatus)
     private eventStatusRepository: Repository<EventStatus>,
     private organizerService: OrganizerService,
     private eventMapperService: EventMapperService,
     private userService: UserService,
+    private requestService: RequestService,
+    private eventImageService: EventImageService,
+    private configService: ConfigService,
   ) {}
-
-  async addEventImage(event: Event): Promise<EventImage> {
-    return await this.eventImageRepository.save({
-      event: event,
-      eventImage: '',
-    });
-  }
 
   /**
    * Prepare event mapper objects for event custom fields and event mapper fields.
@@ -122,7 +120,7 @@ export class EventService {
       cover: cover,
       description: event.description,
     };
-    if (!organizer) throw new BadRequestException('Invalid organizer id');
+    if (!organizer) throw new BadRequestException('Organizer not found');
     const eventMapper = this.prepareEventMapperObject(event);
     const newEvent = await this.eventRepository.save({
       ...eventData,
@@ -135,6 +133,20 @@ export class EventService {
       });
     }
     return newEvent;
+  }
+
+  @OnEvent('upload.images', { async: true })
+  async pushImagesToFileServer(payload: { files: any[]; event: Event }) {
+    for (let i = 0; i < payload.files.length; i++) {
+      const eventImage = await this.eventImageService.addEventImage(
+        payload.event,
+      );
+      await this.requestService.postRequest(
+        `${this.configService.get<string>('FILE_SERVICE_URL')}/file`,
+        { file: payload.files[i], refId: eventImage.eventImage },
+        RequestContentType.FORM_DATA,
+      );
+    }
   }
 
   // async updateEvent()

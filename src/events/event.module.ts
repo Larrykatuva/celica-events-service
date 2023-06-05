@@ -9,6 +9,8 @@ import { EventMapper } from './entities/eventMapper.entity';
 import { EventImage } from './entities/eventImage.entity';
 import { EventStatus } from './entities/eventStatus.entity';
 import { Event } from './entities/event.entity';
+import { EventImageService } from './services/eventImage.service';
+import { EventMapperController } from "./controllers/eventMapper.controller";
 
 @Module({
   imports: [
@@ -16,8 +18,8 @@ import { Event } from './entities/event.entity';
     CqrsModule,
     TypeOrmModule.forFeature([Event, EventMapper, EventImage, EventStatus]),
   ],
-  controllers: [EventsController],
-  providers: [EventService, EventMapperService],
+  controllers: [EventsController, EventMapperController],
+  providers: [EventService, EventMapperService, EventImageService],
   exports: [EventService],
 })
 export class EventModule {}
