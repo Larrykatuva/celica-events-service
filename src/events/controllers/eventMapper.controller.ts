@@ -14,7 +14,7 @@ import {
   ORGANIZER_STAFF_ROLE,
 } from '../../shared/interfaces/roles.interfaces';
 
-@ApiTags('EVENT')
+@ApiTags('Events')
 @Controller('event-mapper')
 export class EventMapperController {
   constructor(private eventMapperService: EventMapperService) {}

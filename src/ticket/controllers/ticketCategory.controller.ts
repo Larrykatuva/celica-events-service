@@ -68,7 +68,7 @@ export class TicketCategoryController {
     );
   }
 
-  @Get('id')
+  @Get(':id')
   @SharedResponse(TicketCategoryResponseDto, 200)
   async getTicketCategory(@Param('id') id: string): Promise<TicketCategory> {
     const category = await this.ticketCategoryService.filterTicketCategory({

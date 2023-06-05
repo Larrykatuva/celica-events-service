@@ -33,18 +33,21 @@ import {
 } from '../../shared/decorators/response.decorators';
 import { EventStatus } from '../entities/eventStatus.entity';
 import { ExtractRequestUser } from '../../shared/decorators/user.decorators';
-import { UserInfo } from 'os';
 import { AuthRoles } from '../../shared/decorators/roles.decorators';
 import {
   CELICA_STAFF_ROLES,
   ORGANIZER_STAFF_ROLE,
 } from '../../shared/interfaces/roles.interfaces';
 import { UserInfoResponse } from '../../shared/interfaces/shared.interface';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @ApiTags('Events')
 @Controller('events')
 export class EventsController {
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard)
@@ -66,10 +69,12 @@ export class EventsController {
   ): Promise<any> {
     if (!files.avatar)
       throw new BadRequestException('Image avatar is required');
-    return await this.eventService.createEvent(
+    const newEvent = await this.eventService.createEvent(
       event,
       files.avatar[0].originalname,
     );
+    this.eventEmitter.emit('upload.images', { files: files, event: newEvent });
+    return newEvent;
   }
 
   @Get()
